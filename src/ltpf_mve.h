@@ -32,9 +32,12 @@
  * precedence on MVE targets.
  */
 
-#if (__ARM_FEATURE_MVE & 1)
+#if (__ARM_FEATURE_MVE & 1) && !defined(TEST_ARM) && !defined(TEST_NEON) \
+        || defined(TEST_MVE)
 
+#ifndef TEST_MVE
 #include <arm_mve.h>
+#endif /* TEST_MVE */
 
 
 /**
@@ -60,7 +63,10 @@ LC3_HOT static inline float mve_dot(const int16_t *a, const int16_t *b, int n)
     return (float)v32;
 }
 
+#ifndef TEST_MVE
 #define dot mve_dot
+#endif
+
 #endif /* dot */
 
 /**
@@ -81,7 +87,10 @@ LC3_HOT static void mve_correlate(
         *(y++) = mve_dot(a, b--, n);
 }
 
+#ifndef TEST_MVE
 #define correlate mve_correlate
+#endif
+
 #endif /* correlate */
 
 #endif /* __ARM_FEATURE_MVE & 1 */
